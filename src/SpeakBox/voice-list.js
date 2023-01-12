@@ -9,16 +9,29 @@ const VoiceList = () => {
     useEffect(() => {
         if (typeof window.speechSynthesis !== 'undefined') {
             setIsLoading(true);
-            window.speechSynthesis.onvoiceschanged = () => {
-                const voices = window.speechSynthesis.getVoices();
-                setVoices(voices);
-                setIsLoading(false);
+            setErrorMessage('');
+    
+            function setDefaultVoice(voices) {
+                const defaultVoice = voices.find(voice => voice.name === 'Google US English');
+                if (defaultVoice) {
+                    setVoice(defaultVoice.name);
+                }
             }
+    
+            setDefaultVoice(window.speechSynthesis.getVoices());
+            window.speechSynthesis.onvoiceschanged = () => {
+                setVoices(window.speechSynthesis.getVoices());
+                setDefaultVoice(window.speechSynthesis.getVoices());
+                setIsLoading(false);
+            };
         } else {
             setErrorMessage('No Voices Detected. Make sure you have an internet connection and/or Try using Google Chrome Browser.');
             setIsLoading(false);
         }
     }, []);
+    
+    
+    
 
     const handleChange = (event) => {
         setVoice(event.target.value);
