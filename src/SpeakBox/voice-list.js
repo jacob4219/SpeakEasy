@@ -1,34 +1,24 @@
 import React, { useState, useEffect } from 'react';
 
-const chrome = window.chrome;
-const [chromeTTSAvailable, setChromeTTSAvailable] = useState(false);
-const [chromeVoices, setChromeVoices] = useState([]);
-const [webVoices, setWebVoices] = useState([]);
-const [errorMessage, setErrorMessage] = useState('');
-
-const getVoices = () => {
-    let voices = [];
-    if (chromeTTSAvailable) {
-        voices = [...voices, ...chromeVoices];
-    }
-    if (webVoices.length > 0) {
-        voices = [...voices, ...webVoices];
-    }
-    return voices;
-}
-
-useEffect(() => {
-    if(chrome && chrome.tts) {
-        setChromeTTSAvailable(true);
-        chrome.tts.getVoices(voices => setChromeVoices(voices));
-    }
-    window.speechSynthesis.getVoices()
-    .then(voices => setWebVoices(voices))
-    .catch(error => setErrorMessage('No Voices Detected. Make sure you have an internet connection and/or Try using Google Chrome Browser.'))
-  }, []);
-
 const VoiceList = () => {
+    const [voices, setVoices] = useState([]);
+    const [errorMessage, setErrorMessage] = useState('');
     const [voice, setVoice] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        if (typeof window.speechSynthesis !== 'undefined') {
+            setIsLoading(true);
+            window.speechSynthesis.onvoiceschanged = () => {
+                const voices = window.speechSynthesis.getVoices();
+                setVoices(voices);
+                setIsLoading(false);
+            }
+        } else {
+            setErrorMessage('No Voices Detected. Make sure you have an internet connection and/or Try using Google Chrome Browser.');
+            setIsLoading(false);
+        }
+    }, []);
 
     const handleChange = (event) => {
         setVoice(event.target.value);
@@ -37,11 +27,25 @@ const VoiceList = () => {
     return (
         <div>
             {errorMessage && <div>{errorMessage}</div>}
-            <select value={voice} onChange={handleChange}>
-                {getVoices().map(voice => <option value={voice.name} key={voice.name}>{voice.name}</option>)}
-            </select>
+            {isLoading ? (
+                <div>Loading...</div>
+            ) : (
+                <select value={voice} onChange={handleChange}>
+                    {voices.length > 0 ? (
+                        voices.map(voice => (
+                            <option value={voice.name} key={voice.name}>
+                                {voice.name}
+                            </option>
+                        ))
+                    ) : (
+                        <option value="" disabled>
+                            No voices available
+                        </option>
+                    )}
+                </select>
+            )}
         </div>
     );
-};
+}
 
 export default VoiceList;
