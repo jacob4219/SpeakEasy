@@ -1,0 +1,4 @@
+// add a component that displays a message if neither the Web API nor the chrome.tts are available. You can create a new component, for example, called "ErrorMessage", and render it conditionally based on the availability of the Web API or chrome.tts.
+// When the none of the API's are available, you can set a state variable called errorMessage to a string containing the message you want to display in the ErrorMessage component, and pass it as a prop to the ErrorMessage component, which will then render the message.
+// And also you can add a close button to the ErrorMessage component that sets the errorMessage state variable to an empty string when clicked, so that the component is no longer rendered.
+// You can use the navigator.onLine property to check the internet connection, if it is false, you can set the errorMessage state variable to the appropriate message.
