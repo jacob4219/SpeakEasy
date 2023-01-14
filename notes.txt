@@ -5,3 +5,186 @@ When the enter button is pressed, you can use the setState hook to add the enter
 For the favorites list, you can create another component that manages the state for the favorite text, and renders the favorite text containers, with a similar set of buttons, such as play, delete, and lock. The lock button can be used to prevent the user from editing or deleting the container.
 
 By breaking down the app into smaller components and managing the state for each component, you can achieve a similar functionality to the vanilla JS app, and make it more maintainable and reusable in the future.
+
+
+experimental code:
+
+import React, { useState } from 'react';
+import { useSpeechSynthesis } from 'react-speech-kit';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+
+function SpeakEasy() {
+  const [text, setText] = useState('');
+  const [lang, setLang] = useState('en-AU');
+  const [blocked, setBlocked] = useState(false);
+  const [pitch, setPitch] = useState(1);
+  const [rate, setRate] = useState(1);
+  const [voiceIndex, setVoiceIndex] = useState('');
+
+  const onEnd = () => {
+    // You could do something here after listening has finished
+  };
+
+  const onResult = (result) => {
+    setText(result);
+    speak({ text: result, voice });
+  };
+
+  const changeLang = (event) => {
+    setLang(event.target.value);
+  };
+
+  const onError = (event) => {
+    if (event.error === 'not-allowed') {
+      setBlocked(true);
+    }
+  };
+
+  const { listen, listening, stop, supported, resetTranscript } = useSpeechRecognition({
+    onResult,
+    onEnd,
+    onError,
+    continuous: true, // added this line
+    interimResults: true, // added this line
+  });
+
+  const toggle = listening
+    ? stop
+    : () => {
+        setBlocked(false);
+        listen({ lang });
+      };
+
+  const { speak, cancel, speaking, voices } = useSpeechSynthesis();
+
+  const voice = voices.find((v) => v.lang === lang) || null;
+
+  const handleSpeak = () => {
+    speak({ text, voice });
+  };
+
+  return (
+    <div>
+      <form>
+        <label htmlFor="language">Language</label>
+        <select
+          form="speak-easy"
+          id="language"
+          value={lang}
+          onChange={changeLang}
+        >
+          <option value="en-AU"> English</option>
+          <option value="fr-FR">French</option>
+          <option value="es-ES">Spanish</option>
+        </select>
+        <label htmlFor="transcript">Transcript</label>
+        <textarea
+          id="transcript"
+          name="transcript"
+          placeholder="Waiting to take notes ..."
+          value={text}
+          rows={3}
+          disabled
+        />
+        <button disabled={blocked} type="button" onClick={toggle}>
+          {listening ? 'Stop' : 'Listen'}
+        </button>
+        {blocked && (
+          <p style={{ color: 'red' }}>
+            The microphone is blocked for this site in your browser.
+          </p>
+        )}
+        <label htmlFor="pitch">Pitch</label>
+        <input
+          id="pitch"
+          name="pitch"
+          value={pitch}
+          onChange={(e) => setPitch(e.target.value)}
+        />
+
+        <label htmlFor="rate">Rate</label>
+        <input
+          id="rate"
+          name="rate"
+          value={rate}
+          onChange={(e) => setRate(e.target.value)}
+        />
+        <select
+          id="voice"
+          name="voice"
+          value={voiceIndex || ''}
+          onChange={(event) => {
+            setVoiceIndex(event.target.value);
+          }}
+        >
+          <option value="">Default</option>
+          {voices.map((option, index) => (
+            <option key={option.voiceURI} value={index}>
+              {`${option.lang} - ${option.name}`}
+            </option>
+          ))}
+        </select>
+        {speaking ? (
+          <button type="button" onClick={cancel}>
+            Stop
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() =>
+              speak({
+                text,
+                voice: voices[voiceIndex],
+                rate,
+                pitch,
+              })
+            }
+          >
+            Speak
+          </button>
+        )}
+      </form>
+    </div>
+  );
+}
+
+export default SpeakEasy;
+
+##################################################################### Speech To Text 
+
+Sure, here is how you can integrate the two components:
+
+In the TextToSpeech component, add a prop text and a function prop setText that will update the state of the text in the component. Also, remove the const [text, setText] = useState(''); line since it will be passed as a prop.
+Copy code
+function TextToSpeech({ text, setText }) {
+In the TextToSpeech component, update the handleEnter function to call the setText function prop instead of updating the state.
+Copy code
+const handleEnter = (e) => {
+    if(e.key === 'Enter') {
+      speak({ text: text, voice: voice, ...audioSettings });
+      setText('');
+    }
+  }
+In the SpeechToText component, pass the finalTranscript and setFinalTranscript as props to the TextToSpeech component.
+Copy code
+<TextToSpeech text={finalTranscript[0]} setText={setFinalTranscript} voice={voice} audioSettings={audioSettings}/>
+In the SpeechToText component, remove the state for audioSettings and voice and remove the props for them in the TextToSpeech component. Since AudioAdjusters component is using the same state.
+
+In the SpeechToText component, remove the TextToSpeech import and add the AudioAdjusters import.
+
+Copy code
+import AudioAdjusters from './audio-adjusters';
+Inside the SpeechToText component, add the AudioAdjusters component and pass the setFinalTranscript and finalTranscript as props to it.
+Copy code
+<AudioAdjusters finalTranscript={finalTranscript} setFinalTranscript={setFinalTranscript} />
+In the AudioAdjusters component, update the component to use the passed finalTranscript and setFinalTranscript props.
+Copy code
+const AudioAdjusters = ({ finalTranscript, setFinalTranscript }) => {
+In the AudioAdjusters component, update the handleMute function to call the speak function with the finalTranscript and mute state.
+Copy code
+const handleMute = () => {
+    setMute(!mute);
+    speak({ text: finalTranscript, mute });
+  };
+This should allow the SpeechToText component to pass the recognized speech to the TextToSpeech component and update the state when the Dictate button is pressed. Also, the AudioAdjusters component should be able to control the audio settings and mute the speech.
+

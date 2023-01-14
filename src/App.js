@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 // import Speak from './SpeakBox/speak';
-import TextInput from './SpeakBox/text-input-field';
-
+import TextToSpeech from './SpeakBox/text-to-speech';
+// import AudioAdjusters from './SpeakBox/audio-adjusters';
+// import VoiceMenu from './SpeakBox/voice-menu';
+import SpeechToText from './SpeakBox/speech-to-text';
 // const App = () => {
 //   const [selectedVoice, setSelectedVoice] = useState(null);
 
@@ -19,7 +21,11 @@ import TextInput from './SpeakBox/text-input-field';
 const App = () => {
   return (
       <div>
-          <TextInput />
+          {/* <SpeakEasy /> */}
+          {/* <AudioAdjusters /> */}
+          <TextToSpeech />
+          {/* <VoiceMenu /> */}
+          <SpeechToText />
           {/* <SpeechOutput />
           <VoiceSelect />
           <RatePitchVolumeControl />
