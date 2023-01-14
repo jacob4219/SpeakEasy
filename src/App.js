@@ -1,18 +1,33 @@
-import './App.css';
 import React, { useState } from 'react';
-import TextInputField from './SpeakBox/text-input-field';
-import VoiceList from './SpeakBox/voice-list';
+// import Speak from './SpeakBox/speak';
+import TextInput from './SpeakBox/text-input-field';
+
+// const App = () => {
+//   const [selectedVoice, setSelectedVoice] = useState(null);
+
+//   return (
+//     <div>
+//       {/* <Speak selectedVoice={selectedVoice} setSelectedVoice={setSelectedVoice} /> */}
+//       <TextInputField selectedVoice={selectedVoice} />
+//     </div>
+//   );
+// };
+
+// export default App;
 
 
 const App = () => {
-  const [voice, setVoice] = useState('');
-
   return (
-    <div>
-      <VoiceList setVoice={setVoice} />
-      <TextInputField selectedVoice={voice} />
-    </div>
+      <div>
+          <TextInput />
+          {/* <SpeechOutput />
+          <VoiceSelect />
+          <RatePitchVolumeControl />
+          <MuteButton />
+          <Recent />
+          <Favorites /> */}
+      </div>
   );
-};
+}
 
 export default App;
