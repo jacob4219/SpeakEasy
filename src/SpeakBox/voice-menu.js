@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useSpeechSynthesis } from 'react-speech-kit';
 
-function VoiceMenu() {
-  const [selectedVoice, setSelectedVoice] = useState('Google US English');
-  const { supported, voices } = useSpeechSynthesis();
+function VoiceMenu({ selectedVoice, setSelectedVoice, voices }) {
+  const { supported } = useSpeechSynthesis();
 
   if (!supported) {
     return <div>Sorry, your browser does not support speech synthesis</div>;
