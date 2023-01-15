@@ -1,6 +1,6 @@
 import React from 'react';
 // import Speak from './SpeakBox/speak';
-// import TextToSpeech from './SpeakBox/text-to-speech';
+import TextToSpeech from './SpeakBox/text-to-speech';
 // import AudioAdjusters from './SpeakBox/audio-adjusters';
 import SpeechToText from './SpeakBox/speech-to-text';
 // const App = () => {
@@ -23,7 +23,7 @@ const App = () => {
           {/* <SpeakEasy /> */}
           {/* <AudioAdjusters /> */}
           <SpeechToText />
-          {/* <TextToSpeech /> */}
+          <TextToSpeech />
           {/* <SpeechOutput />
           <VoiceSelect />
           <RatePitchVolumeControl />

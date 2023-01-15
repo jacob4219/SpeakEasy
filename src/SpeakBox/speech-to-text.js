@@ -27,7 +27,7 @@ if (listening) {
 SpeechRecognition.startListening({ continuous: true });
 listeningInterval = setInterval(() => {
 setFinalTranscript(transcript);
-}, 480);
+}, 525);
 } else {
 clearInterval(listeningInterval);
 SpeechRecognition.stopListening();
