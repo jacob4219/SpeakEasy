@@ -188,3 +188,47 @@ const handleMute = () => {
   };
 This should allow the SpeechToText component to pass the recognized speech to the TextToSpeech component and update the state when the Dictate button is pressed. Also, the AudioAdjusters component should be able to control the audio settings and mute the speech.
 
+############################### Back End ########################################
+
+Great, proceeding with Node.js is a good choice as it is a popular and widely-used technology for building backends.
+
+Here are the steps you can take to set up a backend for your React project:
+
+Install Node.js and npm (Node Package Manager) on your computer if you haven't already.
+
+Create a new folder in your project directory to hold the backend files, and navigate to it in your command line.
+
+Initialize a new Node.js project by running npm init -y. This will create a package.json file in your backend folder.
+
+Install the necessary packages for your backend. For example, you can install Express for routing, MongoDB for a database, and Passport for user authentication. You can install these packages by running npm install express mongodb passport.
+
+Set up the server. In a new file named server.js or index.js, import the necessary packages and configure your server. For example, you can use Express to set up routing, and MongoDB to connect to your database.
+
+Set up user authentication. You can use Passport for this, and there are many strategies available such as Local strategy, JWT strategy, OAuth strategy and many more.
+
+Test your backend by starting the server with node server.js or nodemon server.js and make a request to it using a tool like Postman.
+
+Once your backend is set up and working properly, you can integrate it with your React frontend by making API calls from your frontend code to your backend.
+
+Please let me know if you need any further help on any specific step.
+
+
+
+Setting up a Node.js server:
+First, you will need to have Node.js installed on your computer. You can download it from the official website (https://nodejs.org/en/)
+
+Next, create a new directory for your backend server. In this directory, initialize a new Node.js project by running npm init in the command line. This will create a package.json file, which will contain information about your project and its dependencies.
+
+In the same directory, you will also want to create a new file called server.js. This file will contain the code for your server.
+
+To set up the basic structure of the server, you will need to import the http module from the Node.js core library. This module allows you to create a server that can handle HTTP requests and responses.
+
+Create a new instance of the http.Server class and set up a listener for the request event. This event will be emitted every time a client makes a request to your server.
+
+In the callback function for the request event, you can access information about the request, such as the URL, headers, and body. You can also use this function to send a response to the client by calling the response.end() method.
+
+Start the server by calling the listen() method on the http.Server instance, and passing in a port number as an argument.
+
+Now that the server is running, you can test it by sending a request to http://localhost:<port> in your browser or using a tool like curl or postman.
+
+The above steps should get you a basic server running, and it's a good starting point for creating a more complex server with routing, handling different HTTP methods, handling different routes, connecting to a database and so on.
