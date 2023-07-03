@@ -55,29 +55,18 @@ const Entry = ({ entry, setEntries, field }) => {
   const deleteEntry = () => {
     setEntries(prevEntries => ({
       ...prevEntries,
-      [field]: prevEntries[field].filter(e => e.id !== entry.id),
-      recycle: [...prevEntries.recycle, entry],
+      [field]: prevEntries[field].filter(e => e.id !== entry.id) // Use the entry's id to delete it
     }));
   };
 
-  const favoriteEntry = () => {
-    if (field === 'recent') {
-      setEntries(prevEntries => ({
-        ...prevEntries,
-        [field]: prevEntries[field].filter(e => e.id !== entry.id),
-        favorite: [...prevEntries.favorite, entry],
-      }));
-    }
-  };
-
   return (
-    <div>
-      <p>{entry.text}</p>
+    <div className='entry'>
+      <h3>{entry.text}</h3>
       <button onClick={deleteEntry}>Delete</button>
-      {field === 'recent' && <button onClick={favoriteEntry}>Favorite</button>}
     </div>
   );
 };
 
 export default Entry;
+
 

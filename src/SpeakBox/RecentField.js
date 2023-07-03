@@ -586,12 +586,30 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// import React from 'react';
+// import Entry from './Entry';
+
+// const RecentField = ({ entries, setEntries }) => {
+//   // Implementation for RecentField-specific features...
+
+//   return (
+//     <div>
+//       <h2>Recent</h2>
+//       {entries.map(entry => 
+//         <Entry key={entry.id} entry={entry} setEntries={setEntries} field="recent" />
+//       )}
+//     </div>
+//   );
+// };
+
+// export default RecentField;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import React from 'react';
 import Entry from './Entry';
 
 const RecentField = ({ entries, setEntries }) => {
-  // Implementation for RecentField-specific features...
-
   return (
     <div>
       <h2>Recent</h2>
@@ -603,3 +621,4 @@ const RecentField = ({ entries, setEntries }) => {
 };
 
 export default RecentField;
+

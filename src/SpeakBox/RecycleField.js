@@ -56,6 +56,22 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+// import React from 'react';
+// import Entry from './Entry';
+
+// const RecycleField = ({ entries, setEntries }) => {
+//   return (
+//     <div>
+//       <h2>Recycle</h2>
+//       {entries.map(entry => 
+//         <Entry key={entry.id} entry={entry} setEntries={setEntries} field="recycle" />
+//       )}
+//     </div>
+//   );
+// };
+
+// export default RecycleField;
+
 import React from 'react';
 import Entry from './Entry';
 

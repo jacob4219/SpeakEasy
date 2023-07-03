@@ -131,7 +131,6 @@ const AudioAdjusters = ({ audioSettings, setAudioSettings }) => {
         />
       </div>
       <div>
-        <label>Mute</label>
         <button onClick={handleMute}>{mute ? 'Unmute' : 'Mute'}</button>
       </div>
     </div>

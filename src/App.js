@@ -983,7 +983,7 @@ import SpeechToText from './SpeakBox/SpeechToText';
 import RecentField from './SpeakBox/RecentField';
 import FavoriteField from './SpeakBox/FavoriteField';
 import RecycleField from './SpeakBox/RecycleField';
-// import UserGeneratedField from './SpeakBox/UserGeneratedField';
+import UserGeneratedField from './SpeakBox/UserGeneratedField';
 
 const App = () => {
   const [entries, setEntries] = useState({ recent: [], favorite: [], recycle: [], userGenerated: [] });
@@ -1002,7 +1002,7 @@ const App = () => {
       <RecentField entries={entries.recent} setEntries={setEntries} />
       <FavoriteField entries={entries.favorite} setEntries={setEntries} />
       <RecycleField entries={entries.recycle} setEntries={setEntries} />
-      {/* <UserGeneratedField entries={entries.userGenerated} setEntries={setEntries} /> */}
+      <UserGeneratedField entries={entries.userGenerated} setEntries={setEntries} />
     </div>
   );
 };

@@ -443,3 +443,4 @@ const FavoriteField = ({ entries, setEntries }) => {
 };
 
 export default FavoriteField;
+
