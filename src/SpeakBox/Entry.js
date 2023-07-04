@@ -1,84 +1,170 @@
-// import React, { useState, useEffect } from 'react';
-// import { v4 as uuidv4 } from 'uuid';
 
-// const Entries = ({ onNewEntry }) => {
-//   const [fields, setFields] = useState({ recent: [] });
-
-//   useEffect(() => {
-//     const storedFields = localStorage.getItem('fields');
-//     if (storedFields) setFields(JSON.parse(storedFields));
-//   }, []);
-
-//   useEffect(() => {
-//     localStorage.setItem('fields', JSON.stringify(fields));
-//   }, [fields]);
-
-//   const addEntry = (field, entry) => {
-//     setFields((prevFields) => ({
-//       ...prevFields,
-//       [field]: [{ ...entry, id: uuidv4() }, ...(prevFields[field] || [])]
+// const Entry = ({ entry, setEntries, field }) => {
+//   const deleteEntry = () => {
+//     setEntries(prevEntries => ({
+//       ...prevEntries,
+//       recycle: [...prevEntries.recycle, entry], // Add the entry to the Recycle field
+//       [field]: prevEntries[field].filter(e => e.id !== entry.id) // Remove the entry from the current field
 //     }));
 //   };
 
-//   useEffect(() => {
-//     if (onNewEntry) {
-//       onNewEntry(addEntry);
-//     }
-//   }, [addEntry, onNewEntry]);
+//   const moveEntry = (targetField) => {
+//     setEntries(prevEntries => ({
+//       ...prevEntries,
+//       [targetField]: [...prevEntries[targetField], entry], // Add the entry to the target field
+//       [field]: prevEntries[field].filter(e => e.id !== entry.id) // Remove the entry from the current field
+//     }));
+//   };
 
 //   return (
-//     <div>
-//       {Object.entries(fields).map(([fieldName, fieldEntries]) => (
-//         <div key={fieldName}>
-//           <h2>{fieldName}</h2>
-//           {fieldEntries.map((entry) => (
-//             <p key={entry.id}>{entry.text}</p>
-//           ))}
-//         </div>
-//       ))}
+//     <div className='entry'>
+//       <h3>{entry.text}</h3>
+//       {field !== 'recycle' && <button onClick={deleteEntry}>Delete</button>}
+//       {field !== 'favorite' && <button onClick={() => moveEntry('favorite')}>Favorite</button>}
+//       {field !== 'recycle' && <button onClick={() => moveEntry('recycle')}>Recycle</button>}
+//       {field !== 'userGenerated' && <button onClick={() => moveEntry('userGenerated')}>User</button>}
 //     </div>
 //   );
 // };
 
-// export default Entries;
+// export default Entry;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////Working Code Above^^^///////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// import { useSpeechSynthesis } from 'react-speech-kit';
+// const Entry = ({ entry, setEntries, field }) => {
+//   const { speak } = useSpeechSynthesis();
+
+//   const deleteEntry = () => {
+//     setEntries(prevEntries => ({
+//       ...prevEntries,
+//       recycle: [...prevEntries.recycle, entry], // Add the entry to the Recycle field
+//       [field]: prevEntries[field].filter(e => e.id !== entry.id) // Remove the entry from the current field
+//     }));
+//   };
+
+//   const moveEntry = (targetField) => {
+//     setEntries(prevEntries => ({
+//       ...prevEntries,
+//       [targetField]: [...prevEntries[targetField], entry], // Add the entry to the target field
+//       [field]: prevEntries[field].filter(e => e.id !== entry.id) // Remove the entry from the current field
+//     }));
+//   };
+
+//   const playEntry = () => {
+//     const { text, voice, audioSettings } = entry;
+//     speak({ text, voice, ...audioSettings });
+//   };
+
+//   return (
+//     <div className='entry'>
+//       <h3>{entry.text}</h3>
+//       <button onClick={playEntry}>Play</button>
+//       {field !== 'recycle' && <button onClick={deleteEntry}>Delete</button>}
+//       {field !== 'favorite' && <button onClick={() => moveEntry('favorite')}>Favorite</button>}
+//       {field !== 'recycle' && <button onClick={() => moveEntry('recycle')}>Recycle</button>}
+//       {field !== 'userGenerated' && <button onClick={() => moveEntry('userGenerated')}>User</button>}
+//     </div>
+//   );
+// };
+
+// export default Entry;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////Working Code Above^^^///////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// Working Code Above //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// import React from 'react';
+// import { useSpeechSynthesis } from 'react-speech-kit';
 
+// const Entry = ({ entry, setEntries, field }) => {
+//   const { speak, voices } = useSpeechSynthesis();
+
+//   const deleteEntry = () => {
+//     setEntries(prevEntries => ({
+//       ...prevEntries,
+//       recycle: [...prevEntries.recycle, entry],
+//       [field]: prevEntries[field].filter(e => e.id !== entry.id)
+//     }));
+//   };
+
+//   const moveEntry = (targetField) => {
+//     setEntries(prevEntries => ({
+//       ...prevEntries,
+//       [targetField]: [...prevEntries[targetField], entry],
+//       [field]: prevEntries[field].filter(e => e.id !== entry.id)
+//     }));
+//   };
+
+//   const playEntry = () => {
+//     const { text, audioSettings, selectedVoice } = entry;
+//     const voice = voices.find((v) => v.name === selectedVoice);
+//     speak({ text, voice, ...audioSettings });
+//   };
+
+//   return (
+//     <div className='entry'>
+//       <h3>{entry.text}</h3>
+//       {field === 'recycle' && <button onClick={deleteEntry}>Delete</button>}
+//       {field !== 'favorite' && <button onClick={() => moveEntry('favorite')}>Favorite</button>}
+//       {field !== 'recycle' && <button onClick={() => moveEntry('recycle')}>Recycle</button>}
+//       {field !== 'userGenerated' && <button onClick={() => moveEntry('userGenerated')}>User</button>}
+//       <button onClick={playEntry}>Play</button>
+//     </div>
+//   );
+// };
+
+// export default Entry;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////Working Code Above^^^///////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import React from 'react';
+import { useSpeechSynthesis } from 'react-speech-kit';
 
 const Entry = ({ entry, setEntries, field }) => {
+  const { speak, voices } = useSpeechSynthesis();
+
   const deleteEntry = () => {
     setEntries(prevEntries => ({
       ...prevEntries,
-      recycle: [...prevEntries.recycle, entry], // Add the entry to the Recycle field
-      [field]: prevEntries[field].filter(e => e.id !== entry.id) // Remove the entry from the current field
+      recycle: [...prevEntries.recycle, entry],
+      [field]: prevEntries[field].filter(e => e.id !== entry.id)
     }));
   };
 
   const moveEntry = (targetField) => {
     setEntries(prevEntries => ({
       ...prevEntries,
-      [targetField]: [...prevEntries[targetField], entry], // Add the entry to the target field
-      [field]: prevEntries[field].filter(e => e.id !== entry.id) // Remove the entry from the current field
+      [targetField]: [...prevEntries[targetField], entry],
+      [field]: prevEntries[field].filter(e => e.id !== entry.id)
     }));
+  };
+
+  const playEntry = () => {
+    const { text, audioSettings, selectedVoice } = entry;
+    const voice = voices.find((v) => v.name === selectedVoice);
+    speak({ text, voice, ...audioSettings });
   };
 
   return (
     <div className='entry'>
       <h3>{entry.text}</h3>
-      <button onClick={deleteEntry}>Delete</button>
-      <button onClick={() => moveEntry('favorite')}>Move to Favorite</button>
-      <button onClick={() => moveEntry('recycle')}>Move to Recycle</button>
-      <button onClick={() => moveEntry('userGenerated')}>Move to User Generated</button>
+      {field === 'recycle' && <button onClick={deleteEntry}>Delete</button>}
+      {field !== 'favorite' && <button onClick={() => moveEntry('favorite')}>Favorite</button>}
+      {field !== 'recycle' && <button onClick={() => moveEntry('recycle')}>Recycle</button>}
+      {field !== 'userGenerated' && <button onClick={() => moveEntry('userGenerated')}>User</button>}
+      <button onClick={playEntry}>Play</button>
     </div>
   );
 };
 
 export default Entry;
-
 
 
 
