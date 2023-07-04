@@ -49,13 +49,20 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-import React from 'react';
-
 const Entry = ({ entry, setEntries, field }) => {
   const deleteEntry = () => {
     setEntries(prevEntries => ({
       ...prevEntries,
-      [field]: prevEntries[field].filter(e => e.id !== entry.id) // Use the entry's id to delete it
+      recycle: [...prevEntries.recycle, entry], // Add the entry to the Recycle field
+      [field]: prevEntries[field].filter(e => e.id !== entry.id) // Remove the entry from the current field
+    }));
+  };
+
+  const moveEntry = (targetField) => {
+    setEntries(prevEntries => ({
+      ...prevEntries,
+      [targetField]: [...prevEntries[targetField], entry], // Add the entry to the target field
+      [field]: prevEntries[field].filter(e => e.id !== entry.id) // Remove the entry from the current field
     }));
   };
 
@@ -63,10 +70,18 @@ const Entry = ({ entry, setEntries, field }) => {
     <div className='entry'>
       <h3>{entry.text}</h3>
       <button onClick={deleteEntry}>Delete</button>
+      <button onClick={() => moveEntry('favorite')}>Move to Favorite</button>
+      <button onClick={() => moveEntry('recycle')}>Move to Recycle</button>
+      <button onClick={() => moveEntry('userGenerated')}>Move to User Generated</button>
     </div>
   );
 };
 
 export default Entry;
+
+
+
+
+
 
 

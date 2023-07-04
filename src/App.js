@@ -978,33 +978,72 @@
 
 // export default App;
 
-import React, { useState } from 'react';
-import SpeechToText from './SpeakBox/SpeechToText';
-import RecentField from './SpeakBox/RecentField';
-import FavoriteField from './SpeakBox/FavoriteField';
-import RecycleField from './SpeakBox/RecycleField';
-import UserGeneratedField from './SpeakBox/UserGeneratedField';
+// import React, { useState } from 'react';
+// import SpeechToText from './SpeakBox/SpeechToText';
+// import RecentField from './SpeakBox/RecentField';
+// import FavoriteField from './SpeakBox/FavoriteField';
+// import RecycleField from './SpeakBox/RecycleField';
+// import UserGeneratedField from './SpeakBox/UserGeneratedField';
 
-const App = () => {
-  const [entries, setEntries] = useState({ recent: [], favorite: [], recycle: [], userGenerated: [] });
+// const App = () => {
+//   const [entries, setEntries] = useState({ recent: [], favorite: [], recycle: [], userGenerated: [] });
+
+//   const onFinalTranscription = (entry) => {
+//     setEntries((prevEntries) => ({
+//       ...prevEntries,
+//       recent: [{ ...entry, timestamp: new Date().toISOString() }, ...prevEntries.recent],
+//     }));
+//   };
+
+//   return (
+//     <div className='app'>
+//       <h1>Gypsy</h1>
+//       <SpeechToText onFinalTranscription={onFinalTranscription} />
+//       <RecentField entries={entries.recent} setEntries={setEntries} />
+//       <FavoriteField entries={entries.favorite} setEntries={setEntries} />
+//       <RecycleField entries={entries.recycle} setEntries={setEntries} />
+//       <UserGeneratedField entries={entries.userGenerated} setEntries={setEntries} />
+//     </div>
+//   );
+// };
+
+// export default App;
+
+import React, { useState } from 'react';
+import Field from './SpeakBox/Field';
+import SpeechToText from './SpeakBox/SpeechToText';
+
+function App() {
+  const [entries, setEntries] = useState({
+    recent: [],
+    favorite: [],
+    recycle: [],
+    userGenerated: [],
+  });
 
   const onFinalTranscription = (entry) => {
-    setEntries((prevEntries) => ({
-      ...prevEntries,
-      recent: [{ ...entry, timestamp: new Date().toISOString() }, ...prevEntries.recent],
+    setEntries(prev => ({
+      ...prev,
+      recent: [entry, ...prev.recent],
     }));
   };
+
+  const fields = [
+    { title: 'Recent', name: 'recent' },
+    { title: 'Favorite', name: 'favorite' },
+    { title: 'Recycle', name: 'recycle' },
+    { title: 'User Generated', name: 'userGenerated' },
+  ];
 
   return (
     <div className='app'>
       <h1>Gypsy</h1>
       <SpeechToText onFinalTranscription={onFinalTranscription} />
-      <RecentField entries={entries.recent} setEntries={setEntries} />
-      <FavoriteField entries={entries.favorite} setEntries={setEntries} />
-      <RecycleField entries={entries.recycle} setEntries={setEntries} />
-      <UserGeneratedField entries={entries.userGenerated} setEntries={setEntries} />
+      {fields.map(field => 
+        <Field key={field.name} title={field.title} entries={entries[field.name]} setEntries={setEntries} field={field.name} />
+      )}
     </div>
   );
-};
+}
 
 export default App;
