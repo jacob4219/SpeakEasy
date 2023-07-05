@@ -606,19 +606,19 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import React from 'react';
-import Entry from './Entry';
+// import React from 'react';
+// import Entry from './Entry';
 
-const RecentField = ({ entries, setEntries }) => {
-  return (
-    <div>
-      <h2>Recent</h2>
-      {entries.map(entry => 
-        <Entry key={entry.id} entry={entry} setEntries={setEntries} field="recent" />
-      )}
-    </div>
-  );
-};
+// const RecentField = ({ entries, setEntries }) => {
+//   return (
+//     <div>
+//       <h2>Recent</h2>
+//       {entries.map(entry => 
+//         <Entry key={entry.id} entry={entry} setEntries={setEntries} field="recent" />
+//       )}
+//     </div>
+//   );
+// };
 
-export default RecentField;
+// export default RecentField;
 

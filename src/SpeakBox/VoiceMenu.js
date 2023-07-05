@@ -56,18 +56,49 @@
 
 // export default VoiceMenu;
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// import React from 'react';
+
+// function VoiceMenu({ selectedVoice, setSelectedVoice }) {
+//   const voices = window.speechSynthesis.getVoices();
+
+//   return (
+//     <div>
+//       <select
+//         value={selectedVoice}
+//         onChange={(e) => setSelectedVoice(e.target.value)}
+//       >
+//         {voices.map((voice) => (
+//           <option key={voice.name} value={voice.name}>
+//             {voice.name}
+//           </option>
+//         ))}
+//       </select>
+//     </div>
+//   );
+// }
+
+// export default VoiceMenu;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import React from 'react';
 
-function VoiceMenu({ selectedVoice, setSelectedVoice }) {
-  const voices = window.speechSynthesis.getVoices();
+const VoiceMenu = ({ voices, selectedVoice, setSelectedVoice }) => {
+  const handleChange = (event) => {
+    setSelectedVoice(event.target.value);
+  };
 
   return (
     <div>
-      <select
-        value={selectedVoice}
-        onChange={(e) => setSelectedVoice(e.target.value)}
-      >
+      <label htmlFor="voice-select">Select Voice:</label>
+      <select id="voice-select" value={selectedVoice || ''} onChange={handleChange}>
         {voices.map((voice) => (
           <option key={voice.name} value={voice.name}>
             {voice.name}
@@ -76,6 +107,8 @@ function VoiceMenu({ selectedVoice, setSelectedVoice }) {
       </select>
     </div>
   );
-}
+};
 
 export default VoiceMenu;
+
+

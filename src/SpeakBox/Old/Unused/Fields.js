@@ -18,29 +18,30 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import React from 'react';
-import FavoriteField from './FavoriteField';
-import RecentField from './RecentField';
-import RecycleField from './RecycleField';
-import UserGeneratedField from './UserGeneratedField';
+// import React from 'react';
+// import FavoriteField from './FavoriteField';
+// import RecentField from './RecentField';
+// import RecycleField from './RecycleField';
+// import UserGeneratedField from './UserGeneratedField';
 
-const fieldComponentMapping = {
-  favorite: FavoriteField,
-  recent: RecentField,
-  recycle: RecycleField,
-  userGenerated: UserGeneratedField,
-};
+// const fieldComponentMapping = {
+//   favorite: FavoriteField,
+//   recent: RecentField,
+//   recycle: RecycleField,
+//   userGenerated: UserGeneratedField,
+// };
 
-const Fields = ({ entries, setEntries }) => {
-  return (
-    <div>
-      {Object.keys(entries).map(field => {
-        const Component = fieldComponentMapping[field];
-        return <Component key={field} entries={entries[field]} setEntries={setEntries} />;
-      })}
-    </div>
-  );
-};
+// const Fields = ({ entries, setEntries }) => {
+//   return (
+//     <div>
+//       {Object.keys(entries).map(field => {
+//         const Component = fieldComponentMapping[field];
+//         return <Component key={field} entries={entries[field]} setEntries={setEntries} />;
+//       })}
+//     </div>
+//   );
+// };
 
-export default Fields;
+// export default Fields;
 
+/// No longer used
