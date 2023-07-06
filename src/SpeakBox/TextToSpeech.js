@@ -1,50 +1,64 @@
-import React, { useState } from 'react';
-import { useSpeechSynthesis } from 'react-speech-kit';
-import AudioAdjusters from './AudioAdjusters';
+// import React, { useState, useRef, useEffect } from 'react';
+// import { useSpeechSynthesis } from 'react-speech-kit';
+// import { useAudioSettings } from './AudioSettingsContext'; 
+// import { v4 as uuidv4 } from 'uuid'; // import the UUID generator
 
-function TextToSpeech() {
-  const [text, setText] = useState('');
-  const [voice, setVoice] = useState(null);
-  const [audioSettings, setAudioSettings] = useState({pitch: 1, rate: 1, volume: 1});
-  const { speak, voices } = useSpeechSynthesis();
+// const TextToSpeech = ({ onNewEntry }) => {
+//   const [input, setInput] = useState("");
+//   const { speak, voices } = useSpeechSynthesis();
+//   const { audioSettings, selectedVoice } = useAudioSettings(); 
+//   const inputRef = useRef(); // to keep track of the input field
 
-  const handleChange = (e) => {
-    setText(e.target.value);
-  }
+//   const handleKeyDown = (event) => {
+//     if (event.key === "Enter") {
+//       event.preventDefault();
 
-  const handleEnter = (e) => {
-    if(e.key === 'Enter') {
-      speak({ text: text, voice: voice, volume: audioSettings.volume, rate: audioSettings.rate, pitch: audioSettings.pitch });
-      setText('');
-    }
-  }
+//       // Create the entry
+//       const entry = {
+//         id: uuidv4(),
+//         text: input,
+//         audioSettings,
+//         selectedVoice,
+//       };
 
-  return (
-    <div>
-      <textarea
-        value={text}
-        onChange={handleChange}
-        onKeyPress={handleEnter}
-        placeholder="Enter text here..."
-        rows={5}
-        cols={50}
-      />
-      <select
-        value={voice ? voice.voiceURI : ''}
-        onChange={(event) => {
-          setVoice(voices.find((v) => v.voiceURI === event.target.value));
-        }}
-      >
-        <option value="">Choose Your Voice</option>
-        {voices.map((option) => (
-          <option key={option.voiceURI} value={option.voiceURI}>
-             {option.name}
-          </option>
-        ))}
-      </select>
-      <AudioAdjusters audioSettings={audioSettings} setAudioSettings={setAudioSettings} />
-    </div>
-  );
-}
+//       // Speak the entry text
+//       const voice = voices.find((v) => v.name === selectedVoice);
+//       speak({ 
+//         text: input, 
+//         voice, 
+//         volume: audioSettings.volume, 
+//         rate: audioSettings.rate, 
+//         pitch: audioSettings.pitch,
+//       });
 
-export default TextToSpeech;
+//       // Call the parent component's handler
+//       onNewEntry(entry);
+
+//       // Clear the input field and focus it for the next entry
+//       setInput("");
+//       inputRef.current.focus();
+//     }
+//   };
+
+//   useEffect(() => {
+//     // set the focus to the input field on initial render
+//     inputRef.current.focus();
+//   }, []);
+
+//   return (
+//     <input
+//       type="text"
+//       value={input}
+//       onChange={(e) => setInput(e.target.value)}
+//       onKeyDown={handleKeyDown}
+//       ref={inputRef} // attach the ref to the input field
+//       placeholder="Type here..."
+//     />
+//   );
+// };
+
+// export default TextToSpeech;
+
+///////////////////////////////////////////
+///////////////////////////////////////////
+///////////////////////////////////////////
