@@ -1,64 +1,89 @@
-// import React, { useState, useRef, useEffect } from 'react';
-// import { useSpeechSynthesis } from 'react-speech-kit';
-// import { useAudioSettings } from './AudioSettingsContext'; 
-// import { v4 as uuidv4 } from 'uuid'; // import the UUID generator
+import React, { useState } from 'react';
+import { useSpeechSynthesis } from 'react-speech-kit';
+import { useAudioSettings } from './AudioSettingsContext';
 
-// const TextToSpeech = ({ onNewEntry }) => {
-//   const [input, setInput] = useState("");
-//   const { speak, voices } = useSpeechSynthesis();
-//   const { audioSettings, selectedVoice } = useAudioSettings(); 
-//   const inputRef = useRef(); // to keep track of the input field
+const TextToSpeech = ({ onFinalTranscription }) => {
+  const { speak, voices } = useSpeechSynthesis();
+  const { audioSettings, selectedVoice, autoMuteMic, setListening } = useAudioSettings();
+  const [input, setInput] = useState('');
 
-//   const handleKeyDown = (event) => {
-//     if (event.key === "Enter") {
-//       event.preventDefault();
+  const handleInputChange = (e) => {
+    setInput(e.target.value);
+  };
 
-//       // Create the entry
-//       const entry = {
-//         id: uuidv4(),
-//         text: input,
-//         audioSettings,
-//         selectedVoice,
-//       };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (input.trim() === '') return;
+    const newEntry = {
+      id: Date.now(),
+      text: input,
+      audioSettings,
+      selectedVoice,
+    };
+    onFinalTranscription(newEntry);
+    setInput('');
+    handleSpeak(newEntry);
+  };
 
-//       // Speak the entry text
-//       const voice = voices.find((v) => v.name === selectedVoice);
-//       speak({ 
-//         text: input, 
-//         voice, 
-//         volume: audioSettings.volume, 
-//         rate: audioSettings.rate, 
-//         pitch: audioSettings.pitch,
-//       });
+  const handleAdd = (e) => {
+    e.preventDefault();
+    if (input.trim() === '') return;
+    const newEntry = {
+      id: Date.now(),
+      text: input,
+      audioSettings,
+      selectedVoice,
+    };
+    onFinalTranscription(newEntry);
+    setInput('');
+  };
 
-//       // Call the parent component's handler
-//       onNewEntry(entry);
+  const handleSpeak = (entry) => {
+    const voice = voices.find(v => v.name === entry.selectedVoice);
+    if (autoMuteMic) {
+      setListening(false);
+    }
+    speak({
+      text: entry.text,
+      voice,
+      volume: entry.audioSettings.volume,
+      rate: entry.audioSettings.rate,
+      pitch: entry.audioSettings.pitch,
+      onend: () => {
+        if (autoMuteMic) {
+          setListening(true);
+        }
+      },
+    });
+  };
 
-//       // Clear the input field and focus it for the next entry
-//       setInput("");
-//       inputRef.current.focus();
-//     }
-//   };
+  const handlePlay = (e) => {
+    e.preventDefault();
+    if (input.trim() === '') return;
+    const entry = {
+      id: Date.now(),
+      text: input,
+      audioSettings,
+      selectedVoice,
+    };
+    handleSpeak(entry);
+  };
 
-//   useEffect(() => {
-//     // set the focus to the input field on initial render
-//     inputRef.current.focus();
-//   }, []);
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input
+          type='text'
+          value={input}
+          onChange={handleInputChange}
+          placeholder='Enter text...'
+        />
+        <button type='submit'>Enter</button>
+        <button onClick={handlePlay}>Play</button>
+        <button onClick={handleAdd}>+</button>
+      </form>
+    </div>
+  );
+};
 
-//   return (
-//     <input
-//       type="text"
-//       value={input}
-//       onChange={(e) => setInput(e.target.value)}
-//       onKeyDown={handleKeyDown}
-//       ref={inputRef} // attach the ref to the input field
-//       placeholder="Type here..."
-//     />
-//   );
-// };
-
-// export default TextToSpeech;
-
-///////////////////////////////////////////
-///////////////////////////////////////////
-///////////////////////////////////////////
+export default TextToSpeech;
