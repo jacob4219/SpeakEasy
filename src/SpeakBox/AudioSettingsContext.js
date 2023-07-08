@@ -41,7 +41,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import SpeechRecognition from 'react-speech-recognition';
 import { useSpeechSynthesis } from 'react-speech-kit';
 
@@ -55,25 +55,22 @@ export const AudioSettingsProvider = ({ children }) => {
   });
   const [autoMuteMic, setAutoMuteMic] = useState(false);
   const [selectedVoice, setSelectedVoice] = useState('Google US English');
-  const [listening, setListening] = useState(false);
   const { voices } = useSpeechSynthesis();
 
-  const toggleListening = () => {
-    setListening(prev => !prev);
-    if (listening) {
-      SpeechRecognition.stopListening();
-    } else {
+  const listeningRef = useRef(false);
+
+  const setListening = (value) => {
+    listeningRef.current = value;
+    if (value) {
       SpeechRecognition.startListening({ continuous: true });
+    } else {
+      SpeechRecognition.stopListening();
     }
   };
 
-  useEffect(() => {
-    if (listening) {
-      SpeechRecognition.startListening({ continuous: true });
-    } else {
-      SpeechRecognition.stopListening();
-    }
-  }, [listening]);
+  const toggleListening = () => {
+    setListening(!listeningRef.current);
+  };
 
   return (
     <AudioSettingsContext.Provider
@@ -84,6 +81,9 @@ export const AudioSettingsProvider = ({ children }) => {
         setAutoMuteMic,
         selectedVoice,
         setSelectedVoice,
+        listening: listeningRef.current,
+        setListening,
+        listeningRef,
         toggleListening,
         voices,
       }}

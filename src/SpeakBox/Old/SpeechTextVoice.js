@@ -39,36 +39,36 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
 
-// import React, { useState } from 'react';
-// import SpeechToText from './SpeechToText';
-// import { useAudioSettings } from './AudioSettingsContext'; 
+import React, { useState } from 'react';
+import SpeechToText from './SpeechToText';
+import { useAudioSettings } from './AudioSettingsContext'; 
 
-// function SpeechTextVoice ({ setRecentEntries }) {
-//   const { 
-//     audioSettings, 
-//     speak, 
-//     selectedVoice, 
-//     setSelectedVoice 
-//   } = useAudioSettings();
+function SpeechTextVoice ({ setRecentEntries }) {
+  const { 
+    audioSettings, 
+    speak, 
+    selectedVoice, 
+    setSelectedVoice 
+  } = useAudioSettings();
 
-//   const [finalTranscription, setFinalTranscription] = useState('');
+  const [finalTranscription, setFinalTranscription] = useState('');
 
-//   const handleFinalTranscription = (entry) => {
-//     setFinalTranscription(entry.text);
-//     speak({ text: entry.text, voice: entry.selectedVoice });
+  const handleFinalTranscription = (entry) => {
+    setFinalTranscription(entry.text);
+    speak({ text: entry.text, voice: entry.selectedVoice });
 
-//     const newEntry = {
-//       ...entry,
-//       timestamp: Date.now(),
-//     };
-//     setRecentEntries(prev => [newEntry, ...prev]);
-//   };
+    const newEntry = {
+      ...entry,
+      timestamp: Date.now(),
+    };
+    setRecentEntries(prev => [newEntry, ...prev]);
+  };
 
-//   return (
-//     <div>
-//       <SpeechToText onFinalTranscription={handleFinalTranscription} />
-//     </div>
-//   );
-// }
+  return (
+    <div>
+      <SpeechToText onFinalTranscription={handleFinalTranscription} />
+    </div>
+  );
+}
 
-// export default SpeechTextVoice;
+export default SpeechTextVoice;
