@@ -186,21 +186,23 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-import React from "react";
+import React, { useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { useSpeechSynthesis } from "react-speech-kit";
 import { useAudioSettings } from "./AudioSettingsContext";
 import { useDragAndDrop } from "./DragAndDropProvider";
+import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu';
+import '@szhsin/react-menu/dist/index.css';
 
 const Entry = ({ entry, field }) => {
   const { voices } = useSpeechSynthesis();
   const { autoMuteMic, listeningRef, setListening } = useAudioSettings();
   const { moveItem } = useDragAndDrop();
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  // Make the entry draggable
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: entry.id,
-    data: { text: entry.text, field }, // Store field for tracking
+    data: { text: entry.text, field },
   });
 
   const style = {
@@ -211,6 +213,7 @@ const Entry = ({ entry, field }) => {
     cursor: "grab",
     backgroundColor: "#f9f9f9",
     border: "1px solid #ddd",
+    position: "relative",
   };
 
   const handleMove = (targetField) => {
@@ -243,12 +246,18 @@ const Entry = ({ entry, field }) => {
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="entry">
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <h3>{entry.text}</h3>
-      {field !== "favorite" && <button onClick={() => handleMove("favorite")}>Favorite</button>}
-      {field !== "recycle" && <button onClick={() => handleMove("recycle")}>Recycle</button>}
-      {field !== "userGenerated" && <button onClick={() => handleMove("userGenerated")}>User</button>}
-      <button onClick={playEntry}>Play</button>
+      <button onClick={playEntry}>Play</button> 
+      <Menu 
+        menuButton={<MenuButton onClick={() => setMenuOpen(!menuOpen)}>⋮</MenuButton>}
+        isOpen={menuOpen}
+        onClose={() => setMenuOpen(false)}
+      >
+        {field !== 'favorite' && <MenuItem onClick={() => handleMove('favorite')}>Favorite</MenuItem>}
+        {field !== 'recycle' && <MenuItem onClick={() => handleMove('recycle')}>Recycle</MenuItem>}
+        {field !== 'userGenerated' && <MenuItem onClick={() => handleMove('userGenerated')}>User</MenuItem>}
+      </Menu>
     </div>
   );
 };

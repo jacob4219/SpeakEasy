@@ -31,14 +31,11 @@
 import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useDragAndDrop } from "./DragAndDropProvider"; // Import context
 
-const SortableItem = ({ id, content, field }) => {
-  const { moveItem } = useDragAndDrop();
-
+const SortableItem = ({ id, content }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id,
-    data: { id, field }, // Store field info for proper movement
+    data: { id },
   });
 
   const style = {

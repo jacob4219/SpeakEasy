@@ -70,8 +70,7 @@
 ///////////////////////////////////////////////////////
 
 
-import React, { createContext, useState, useContext } from "react";
-import { generateUniqueID } from "./utils/idGenerator";
+import React, { createContext, useContext, useState } from 'react';
 
 const DragAndDropContext = createContext();
 
@@ -81,21 +80,14 @@ export const DragAndDropProvider = ({ children }) => {
     favorite: [],
     recycle: [],
     userGenerated: [],
-    hopper: [],
   });
 
-  // Move item between fields
-  const moveItem = (item, from, to) => {
-    setEntries((prevEntries) => {
-      // Ensure fields exist
-      const updatedFrom = prevEntries[from]?.filter((entry) => entry.id !== item.id) || [];
-      const updatedTo = [...(prevEntries[to] || []), { ...item, field: to }]; // Preserve ID
-
-      return {
-        ...prevEntries,
-        [from]: updatedFrom,
-        [to]: updatedTo,
-      };
+  const moveItem = (entry, fromField, toField) => {
+    setEntries(prevEntries => {
+      const newEntries = { ...prevEntries };
+      newEntries[fromField] = newEntries[fromField].filter(e => e.id !== entry.id);
+      newEntries[toField] = [entry, ...newEntries[toField]];
+      return newEntries;
     });
   };
 

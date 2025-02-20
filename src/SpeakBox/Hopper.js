@@ -223,9 +223,11 @@ import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import Button from "./Button";
 import SortableItem from "./SortableItem"; // Ensure correct import
 import { generateUniqueID } from "./utils/idGenerator";
+import { useAudioSettings } from "./AudioSettingsContext";
 
 const Hopper = () => {
   const [hopperQueue, setHopperQueue] = useState([]);
+  const { voices, audioSettings } = useAudioSettings();
   const silenceOptions = [1, 2, 3, 4, 5]; // Predefined silence durations
 
   // Function to add an item to the hopper queue
@@ -241,6 +243,17 @@ const Hopper = () => {
   };
 
   // Function to play the queue in sequence
+  const speakText = (text) => {
+    const synth = window.speechSynthesis;
+    const utterance = new SpeechSynthesisUtterance(text);
+    const voice = voices.find((v) => v.name === audioSettings.selectedVoice) || null;
+    utterance.voice = voice;
+    utterance.volume = audioSettings.volume;
+    utterance.rate = audioSettings.rate;
+    utterance.pitch = audioSettings.pitch;
+    synth.speak(utterance);
+  };
+
   const playQueue = async () => {
     for (const bubble of hopperQueue) {
       if (bubble.silence) {

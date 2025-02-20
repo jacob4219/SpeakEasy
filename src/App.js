@@ -189,16 +189,16 @@ import Field from "./SpeakBox/Field";
 import SpeechToText from "./SpeakBox/SpeechToText";
 import Hopper from "./SpeakBox/Hopper";
 import { AudioSettingsProvider } from "./SpeakBox/AudioSettingsContext";
-import { DragAndDropProvider, useDragAndDrop } from "./SpeakBox/DragAndDropProvider"; // Import DragAndDropProvider
+import { DragAndDropProvider, useDragAndDrop } from "./SpeakBox/DragAndDropProvider";
 
 const AppContent = () => {
-  const { entries, setEntries } = useDragAndDrop(); // Use context inside a sub-component
+  const { entries, setEntries } = useDragAndDrop();
 
   const onFinalTranscription = (entry) => {
-    const field = entry.field || "recent"; // Default to 'recent' if no field is specified
+    const field = entry.field || "recent";
     setEntries((prev) => ({
       ...prev,
-      [field]: [entry, ...(prev[field] || [])], // Ensure array exists before spreading
+      [field]: [entry, ...(prev[field] || [])],
     }));
   };
 
@@ -217,7 +217,7 @@ const AppContent = () => {
         <Field
           key={field.name}
           title={field.title}
-          entries={entries[field.name] || []} // Ensure array exists
+          entries={entries[field.name] || []}
           setEntries={setEntries}
           field={field.name}
         />
