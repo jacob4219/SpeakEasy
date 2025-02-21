@@ -32,10 +32,10 @@ import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-const SortableItem = ({ id, content }) => {
+const SortableItem = ({ id, content, field }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id,
-    data: { id },
+    data: { id, field },
   });
 
   const style = {

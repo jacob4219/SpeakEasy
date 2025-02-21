@@ -216,29 +216,35 @@
 
 
 //////////////////////////////
-import React, { useState } from "react";
-import { DndContext, closestCenter } from "@dnd-kit/core";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import React from "react";
+import { DndContext, closestCenter, useDroppable } from "@dnd-kit/core";
+import { SortableContext, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 import Button from "./Button";
-import SortableItem from "./SortableItem"; // Ensure correct import
+import SortableItem from "./SortableItem";
+import { useDragAndDrop } from "./DragAndDropProvider";
 import { generateUniqueID } from "./utils/idGenerator";
 import { useAudioSettings } from "./AudioSettingsContext";
 
 const Hopper = () => {
-  const [hopperQueue, setHopperQueue] = useState([]);
+  const { entries, setEntries, moveItem } = useDragAndDrop();
   const { voices, audioSettings } = useAudioSettings();
+  const field = 'hopper';
   const silenceOptions = [1, 2, 3, 4, 5]; // Predefined silence durations
+  const { setNodeRef } = useDroppable({ id: field });
 
   // Function to add an item to the hopper queue
   const addToHopper = (content, isSilence = false) => {
-    setHopperQueue((prevQueue) => [
-      ...prevQueue,
-      {
-        id: generateUniqueID(),
-        content: isSilence ? `Silence (${content}s)` : content,
-        silence: isSilence ? content : null,
-      },
-    ]);
+    setEntries((prevEntries) => ({
+      ...prevEntries,
+      hopper: [
+        ...prevEntries.hopper,
+        {
+          id: generateUniqueID(),
+          content: isSilence ? `Silence (${content}s)` : content,
+          silence: isSilence ? content : null,
+        },
+      ],
+    }));
   };
 
   // Function to play the queue in sequence
@@ -254,7 +260,7 @@ const Hopper = () => {
   };
 
   const playQueue = async () => {
-    for (const bubble of hopperQueue) {
+    for (const bubble of entries.hopper) {
       if (bubble.silence) {
         await new Promise((resolve) => setTimeout(resolve, bubble.silence * 1000));
       } else {
@@ -263,15 +269,39 @@ const Hopper = () => {
     }
   };
 
-  return (
-    <div className="p-4 border rounded-lg bg-gray-100">
-      <h2 className="text-xl font-bold mb-2">Hopper Queue</h2>
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
 
-      {/* Drag and Drop Context */}
-      <DndContext collisionDetection={closestCenter}>
-        <SortableContext items={hopperQueue.map((item) => item.id)} strategy={verticalListSortingStrategy}>
-          {hopperQueue.map((bubble) => (
-            <SortableItem key={bubble.id} id={bubble.id} content={bubble.content} field="hopper" />
+    const fromField = active.data.current?.field;
+    const toField = over.data.current?.field || field;
+
+    if (!fromField || !toField) return;
+
+    if (fromField === toField) {
+      // Reorder inside the same field
+      setEntries((prevEntries) => {
+        const updatedItems = arrayMove(prevEntries[fromField], 
+          prevEntries[fromField].findIndex((item) => item.id === active.id), 
+          prevEntries[fromField].findIndex((item) => item.id === over.id)
+        );
+        return { ...prevEntries, [fromField]: updatedItems };
+      });
+    } else {
+      // Move across different fields
+      const draggedItem = entries[fromField].find((item) => item.id === active.id);
+      if (draggedItem) moveItem(draggedItem, fromField, toField);
+    }
+  };
+
+  return (
+    <div ref={setNodeRef} className="p-4 border rounded-lg bg-gray-100">
+      <h2 className="text-xl font-bold mb-2">Hopper</h2>
+
+      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={entries.hopper.map((item) => item.id)} strategy={verticalListSortingStrategy}>
+          {entries.hopper.map((bubble) => (
+            <SortableItem key={bubble.id} id={bubble.id} content={bubble.content} field={field} />
           ))}
         </SortableContext>
       </DndContext>
