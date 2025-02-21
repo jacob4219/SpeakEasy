@@ -184,6 +184,44 @@
 // export default App;
 
 
+// import React from "react";
+// import SpeechToText from "./SpeakBox/SpeechToText";
+// import Hopper from "./SpeakBox/Hopper";
+// import { AudioSettingsProvider } from "./SpeakBox/AudioSettingsContext";
+// import { DragAndDropProvider } from "./SpeakBox/DragAndDropProvider";
+// import RecentField from "./SpeakBox/RecentField";
+// import FavoriteField from "./SpeakBox/FavoriteField";
+// import RecycleField from "./SpeakBox/RecycleField";
+// import UserGeneratedField from "./SpeakBox/UserGeneratedField";
+
+// const AppContent = () => {
+//   return (
+//     <div className="app">
+//       <h1>Gypsy</h1>
+//       <SpeechToText />
+//       <div className="fields-container">
+//         <RecentField />
+//         <FavoriteField />
+//         <RecycleField />
+//         <UserGeneratedField />
+//       </div>
+//       <Hopper />
+//     </div>
+//   );
+// };
+
+// const App = () => {
+//   return (
+//     <AudioSettingsProvider>
+//       <DragAndDropProvider>
+//         <AppContent />
+//       </DragAndDropProvider>
+//     </AudioSettingsProvider>
+//   );
+// };
+
+// export default App;
+
 import React from "react";
 import SpeechToText from "./SpeakBox/SpeechToText";
 import Hopper from "./SpeakBox/Hopper";
@@ -194,30 +232,24 @@ import FavoriteField from "./SpeakBox/FavoriteField";
 import RecycleField from "./SpeakBox/RecycleField";
 import UserGeneratedField from "./SpeakBox/UserGeneratedField";
 
-const AppContent = () => {
-  return (
-    <div className="app">
-      <h1>Gypsy</h1>
-      <SpeechToText />
-      <div className="fields-container">
-        <RecentField />
-        <FavoriteField />
-        <RecycleField />
-        <UserGeneratedField />
-      </div>
-      <Hopper />
-    </div>
-  );
-};
-
 const App = () => {
   return (
     <AudioSettingsProvider>
       <DragAndDropProvider>
-        <AppContent />
+        <div className="app">
+          <h1>Gypsy</h1>
+          <SpeechToText />
+          <div className="fields-container">
+            <RecentField />
+            <FavoriteField />
+            <RecycleField />
+            <UserGeneratedField />
+          </div>
+          <Hopper />
+        </div>
       </DragAndDropProvider>
     </AudioSettingsProvider>
   );
 };
 
-export default App;
+export default App``
