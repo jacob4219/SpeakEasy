@@ -216,7 +216,6 @@
 
 
 //////////////////////////////
-
 import React, { useState } from "react";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
@@ -272,7 +271,7 @@ const Hopper = () => {
       <DndContext collisionDetection={closestCenter}>
         <SortableContext items={hopperQueue.map((item) => item.id)} strategy={verticalListSortingStrategy}>
           {hopperQueue.map((bubble) => (
-            <SortableItem key={bubble.id} id={bubble.id} content={bubble.content} />
+            <SortableItem key={bubble.id} id={bubble.id} content={bubble.content} field="hopper" />
           ))}
         </SortableContext>
       </DndContext>

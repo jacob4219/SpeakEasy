@@ -185,43 +185,26 @@
 
 
 import React from "react";
-import Field from "./SpeakBox/Field";
 import SpeechToText from "./SpeakBox/SpeechToText";
 import Hopper from "./SpeakBox/Hopper";
 import { AudioSettingsProvider } from "./SpeakBox/AudioSettingsContext";
-import { DragAndDropProvider, useDragAndDrop } from "./SpeakBox/DragAndDropProvider";
+import { DragAndDropProvider } from "./SpeakBox/DragAndDropProvider";
+import RecentField from "./SpeakBox/RecentField";
+import FavoriteField from "./SpeakBox/FavoriteField";
+import RecycleField from "./SpeakBox/RecycleField";
+import UserGeneratedField from "./SpeakBox/UserGeneratedField";
 
 const AppContent = () => {
-  const { entries, setEntries } = useDragAndDrop();
-
-  const onFinalTranscription = (entry) => {
-    const field = entry.field || "recent";
-    setEntries((prev) => ({
-      ...prev,
-      [field]: [entry, ...(prev[field] || [])],
-    }));
-  };
-
-  const fields = [
-    { title: "Recent", name: "recent" },
-    { title: "Favorite", name: "favorite" },
-    { title: "Recycle", name: "recycle" },
-    { title: "User Generated", name: "userGenerated" },
-  ];
-
   return (
     <div className="app">
       <h1>Gypsy</h1>
-      <SpeechToText onFinalTranscription={onFinalTranscription} />
-      {fields.map((field) => (
-        <Field
-          key={field.name}
-          title={field.title}
-          entries={entries[field.name] || []}
-          setEntries={setEntries}
-          field={field.name}
-        />
-      ))}
+      <SpeechToText />
+      <div className="fields-container">
+        <RecentField />
+        <FavoriteField />
+        <RecycleField />
+        <UserGeneratedField />
+      </div>
       <Hopper />
     </div>
   );
