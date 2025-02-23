@@ -10,7 +10,7 @@
 //   const [selectedVoice, setSelectedVoice] = useState('Google US English');
 //   const [lastFinalTranscription, setLastFinalTranscription] = useState('');
 //   const { transcript, resetTranscript, finalTranscript, listening, browserSupportsSpeechRecognition } = useSpeechRecognition();
-//   const { voices, supported } = useSpeechSynthesis();
+//   const { voices = [], supported } = useSpeechSynthesis();
 
 //   const toggleListening = () => {
 //     if (listening) {
@@ -99,7 +99,7 @@
 //     selectedVoice,
 //     setSelectedVoice,
 //     toggleListening,
-//     voices,
+//     voices = [],
 //   } = useAudioSettings();
 
 //   const [lastFinalTranscription, setLastFinalTranscription] = useState('');
@@ -882,7 +882,7 @@ const SpeechToText = ({ onFinalTranscription }) => {
           type="text"
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
-          onKeyPress={handleEnter}
+          onKeyDown={handleEnter}
         />
       </div>
       <button onClick={handlePlayText}>Play</button>

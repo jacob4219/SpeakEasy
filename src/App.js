@@ -233,6 +233,7 @@ function App() {
     favorite: [],
     recycle: [],
     userGenerated: [],
+    hopper: [],
     });
   
 
