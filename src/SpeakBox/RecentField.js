@@ -1,5 +1,5 @@
 import React from "react";
-import { DndContext, closestCenter, useDroppable } from "@dnd-kit/core";
+import { DndContext, closestCenter, useDroppable, useDraggable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 import { useDragAndDrop } from "./DragAndDropProvider";
 import SortableItem from "./SortableItem";
@@ -19,16 +19,15 @@ const RecentField = () => {
     if (!fromField || !toField) return;
 
     if (fromField === toField) {
-      // Reorder inside the same field
       setEntries((prevEntries) => {
-        const updatedItems = arrayMove(prevEntries[fromField], 
-          prevEntries[fromField].findIndex((item) => item.id === active.id), 
+        const updatedItems = arrayMove(
+          prevEntries[fromField],
+          prevEntries[fromField].findIndex((item) => item.id === active.id),
           prevEntries[fromField].findIndex((item) => item.id === over.id)
         );
         return { ...prevEntries, [fromField]: updatedItems };
       });
     } else {
-      // Move across different fields
       const draggedItem = entries[fromField].find((item) => item.id === active.id);
       if (draggedItem) moveItem(draggedItem, fromField, toField);
     }
