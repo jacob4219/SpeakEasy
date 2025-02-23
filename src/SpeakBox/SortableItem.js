@@ -27,7 +27,6 @@
 
 
 //////////////////////////////////////////////////////////////////////////////////////
-
 import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -47,11 +46,18 @@ const SortableItem = ({ id, content, field }) => {
     borderRadius: "4px",
     cursor: "grab",
     boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
   };
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      {content}
+      <span>{content}</span>
+      <div>
+        <button>Edit</button>
+        <button>Delete</button>
+      </div>
     </div>
   );
 };

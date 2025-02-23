@@ -87,9 +87,8 @@ export const DragAndDropProvider = ({ children }) => {
   // Move item between fields
   const moveItem = (item, from, to) => {
     setEntries((prevEntries) => {
-      // Ensure fields exist
       const updatedFrom = prevEntries[from]?.filter((entry) => entry.id !== item.id) || [];
-      const updatedTo = [...(prevEntries[to] || []), { ...item, field: to }]; // Preserve ID
+      const updatedTo = [...(prevEntries[to] || []), { ...item, field: to }];
 
       return {
         ...prevEntries,

@@ -1,5 +1,5 @@
 import React from "react";
-import { DndContext, closestCenter, useDroppable, useDraggable } from "@dnd-kit/core";
+import { DndContext, closestCenter, useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 import { useDragAndDrop } from "./DragAndDropProvider";
 import SortableItem from "./SortableItem";
