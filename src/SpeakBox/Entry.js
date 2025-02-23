@@ -186,80 +186,69 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-import React, { useState } from "react";
-import { useDraggable } from "@dnd-kit/core";
-import { useSpeechSynthesis } from "react-speech-kit";
-import { useAudioSettings } from "./AudioSettingsContext";
-import { useDragAndDrop } from "./DragAndDropProvider";
-import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu';
-import '@szhsin/react-menu/dist/index.css';
+import React from 'react';
+import { useSpeechSynthesis } from 'react-speech-kit';
+import { useAudioSettings } from './AudioSettingsContext'; // import the custom hook
+import SpeechRecognition from 'react-speech-recognition'; // import SpeechRecognition
 
-const Entry = ({ entry, field }) => {
-  const { voices } = useSpeechSynthesis();
-  const { autoMuteMic, listeningRef, setListening } = useAudioSettings();
-  const { moveItem } = useDragAndDrop();
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: entry.id,
-    data: { text: entry.text, field },
-  });
-
-  const style = {
-    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
-    padding: "8px",
-    margin: "4px",
-    borderRadius: "4px",
-    cursor: "grab",
-    backgroundColor: "#f9f9f9",
-    border: "1px solid #ddd",
-    position: "relative",
+const Entry = ({ entry, setEntries, field }) => {
+  const { speak, voices } = useSpeechSynthesis();
+  const { autoMuteMic, listeningRef, setListening } = useAudioSettings(); // use the custom hook
+  const deleteEntry = () => {
+    setEntries(prevEntries => ({
+      ...prevEntries,
+      recycle: [...prevEntries.recycle, entry],
+      [field]: prevEntries[field].filter(e => e.id !== entry.id)
+    }));
   };
 
-  const handleMove = (targetField) => {
-    moveItem(entry, field, targetField);
+  const moveEntry = (targetField) => {
+    setEntries(prevEntries => ({
+      ...prevEntries,
+      [targetField]: [...prevEntries[targetField], entry],
+      [field]: prevEntries[field].filter(e => e.id !== entry.id)
+    }));
   };
 
   const playEntry = () => {
     const { text, audioSettings, selectedVoice } = entry;
     const voice = voices.find((v) => v.name === selectedVoice);
-
-    const wasListeningBeforePlayback = listeningRef.current;
+    if (autoMuteMic) {
+      SpeechRecognition.stopListening();
 
     if (autoMuteMic && listeningRef.current) {
       setListening(false);
     }
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.voice = voice;
-    utterance.volume = audioSettings.volume;
-    utterance.rate = audioSettings.rate;
-    utterance.pitch = audioSettings.pitch;
-
-    utterance.onend = () => {
-      if (autoMuteMic && wasListeningBeforePlayback) {
-        setListening(true);
-      }
-    };
-
-    window.speechSynthesis.speak(utterance);
+    speak({ 
+      text, 
+      voice, 
+      volume: audioSettings.volume, 
+      rate: audioSettings.rate, 
+      pitch: audioSettings.pitch,
+      onend: () => {
+        if (autoMuteMic) {
+          SpeechRecognition.startListening({ continuous: true });
+        }
+        if (autoMuteMic && !listeningRef.current) {
+          setListening(true);
+        }
+      },
+    });
+    }
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <div className='entry'>
       <h3>{entry.text}</h3>
-      <button onClick={playEntry}>Play</button> 
-      <Menu 
-        menuButton={<MenuButton onClick={() => setMenuOpen(!menuOpen)}>⋮</MenuButton>}
-        isOpen={menuOpen}
-        onClose={() => setMenuOpen(false)}
-      >
-        {field !== 'favorite' && <MenuItem onClick={() => handleMove('favorite')}>Favorite</MenuItem>}
-        {field !== 'recycle' && <MenuItem onClick={() => handleMove('recycle')}>Recycle</MenuItem>}
-        {field !== 'userGenerated' && <MenuItem onClick={() => handleMove('userGenerated')}>User</MenuItem>}
-      </Menu>
+      {field === 'recycle' && <button onClick={deleteEntry}>Delete</button>}
+      {field !== 'favorite' && <button onClick={() => moveEntry('favorite')}>Favorite</button>}
+      {field !== 'recycle' && <button onClick={() => moveEntry('recycle')}>Recycle</button>}
+      {field !== 'userGenerated' && <button onClick={() => moveEntry('userGenerated')}>User</button>}
+      <button onClick={playEntry}>Play</button>
     </div>
   );
 };
+
 
 export default Entry;

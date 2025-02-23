@@ -222,18 +222,19 @@
 
 // export default App;
 
-import React from "react";
+import React, { useState } from "react";
 import SpeechToText from "./SpeakBox/SpeechToText";
-import Hopper from "./SpeakBox/Hopper";
 import { AudioSettingsProvider } from "./SpeakBox/AudioSettingsContext";
-import { DragAndDropProvider, useDragAndDrop } from "./SpeakBox/DragAndDropProvider";
-import RecentField from "./SpeakBox/RecentField";
-import FavoriteField from "./SpeakBox/FavoriteField";
-import RecycleField from "./SpeakBox/RecycleField";
-import UserGeneratedField from "./SpeakBox/UserGeneratedField";
+import Field from "./SpeakBox/Field";
 
-const AppContent = () => {
-  const { entries, setEntries } = useDragAndDrop();
+function App() {
+  const [entries, setEntries] = useState({
+    recent: [],
+    favorite: [],
+    recycle: [],
+    userGenerated: [],
+    });
+  
 
   const onFinalTranscription = (entry) => {
     const field = entry.field || "recent";
@@ -243,29 +244,31 @@ const AppContent = () => {
     }));
   };
 
-  return (
-    <div className="app">
-      <h1>Gypsy</h1>
-      <SpeechToText onFinalTranscription={onFinalTranscription} />
-      <div className="fields-container">
-        <RecentField />
-        <FavoriteField />
-        <RecycleField />
-        <UserGeneratedField />
-      </div>
-      <Hopper />
-    </div>
-  );
-};
+  const fields = [
+    { title: 'Recent', name: 'recent' },
+    { title: 'Favorite', name: 'favorite' },
+    { title: 'Recycle', name: 'recycle' },
+    { title: 'User Generated', name: 'userGenerated' },
+    { title: 'Hopper', name: 'hopper' },
+  ];
 
-const App = () => {
   return (
     <AudioSettingsProvider>
-      <DragAndDropProvider>
-        <AppContent />
-      </DragAndDropProvider>
+      <div className='app'>
+        <h1>Gypsy</h1>
+        {/* Component to convert speech to text and handle final transcription */}
+        <SpeechToText onFinalTranscription={onFinalTranscription} />
+        {fields.map(field => (
+          <Field 
+            key={field.name} 
+            title={field.title} 
+            entries={entries[field.name]} 
+            setEntries={setEntries} 
+            field={field.name} 
+          />
+        ))}
+      </div>
     </AudioSettingsProvider>
   );
-};
-
+}
 export default App;
