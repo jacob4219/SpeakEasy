@@ -802,7 +802,7 @@ const SpeechToText = ({ onFinalTranscription }) => {
     padding: "8px",
     margin: "4px",
     borderRadius: "4px",
-    cursor: "grab",
+    cursor: "crosshair",
     backgroundColor: "#f3f3f3",
     border: "1px solid #ccc",
   };
