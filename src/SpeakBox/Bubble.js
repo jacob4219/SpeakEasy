@@ -1,15 +1,3 @@
-// import React from "react";
-
-// const Bubble = ({ bubble }) => {
-//   return (
-//     <div>
-//       <p>{bubble.content}</p>
-//     </div>
-//   );
-// };
-
-// export default Bubble;
-
 import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
