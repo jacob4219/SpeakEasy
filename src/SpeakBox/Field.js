@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Entry from './Entry';
+import { useDrop } from 'react-dnd';
+import Bubble from './Bubble';
 
 const Field = ({ title, entries, setEntries, field, mainVoice, mainRate, mainPitch }) => {
   const [isCollapsed, setIsCollapsed] = useState(field === 'recycle' || entries.length === 0);
@@ -163,14 +164,40 @@ const Field = ({ title, entries, setEntries, field, mainVoice, mainRate, mainPit
     }
   };
 
+  const moveEntry = (fromIndex, toIndex) => {
+    const updatedEntries = [...entries];
+    const [movedEntry] = updatedEntries.splice(fromIndex, 1);
+    updatedEntries.splice(toIndex, 0, movedEntry);
+    setEntries((prevEntries) => ({
+      ...prevEntries,
+      [field]: updatedEntries,
+    }));
+  };
+
   const displayedEntries = isCollapsed
     ? []
     : isExpanded
     ? entries.slice(0, getMaxView())
     : entries.slice(0, getDefaultView());
 
+  const [, drop] = useDrop({
+    accept: 'ENTRY',
+    drop: (item) => {
+      if (item.field !== field) {
+        setEntries((prevEntries) => {
+          const newEntries = prevEntries[item.field].filter((entry) => entry.id !== item.id);
+          return {
+            ...prevEntries,
+            [item.field]: newEntries,
+            [field]: [...prevEntries[field], { ...item, field }],
+          };
+        });
+      }
+    },
+  });
+
   return (
-    <div>
+    <div ref={drop}>
       <h2>{title}</h2>
       <button onClick={handleToggleCollapse}>
         {isCollapsed ? 'Expand' : 'Collapse'}
@@ -204,15 +231,22 @@ const Field = ({ title, entries, setEntries, field, mainVoice, mainRate, mainPit
         <>
           {displayedEntries.length > 0 ? (
             displayedEntries.map((entry, index) => (
-              <div key={entry.id} className='entry'>
-                <Entry entry={entry} setEntries={setEntries} field={field} />
+              <Bubble
+                key={entry.id}
+                id={entry.id}
+                entry={entry}
+                field={field}
+                setEntries={setEntries}
+                index={index}
+                moveEntry={moveEntry}
+              >
                 {field === 'hopper' && (
                   <div className='entry-controls'>
                     <button onClick={() => moveEntryUp(index)}>Up</button>
                     <button onClick={() => moveEntryDown(index)}>Down</button>
                   </div>
                 )}
-              </div>
+              </Bubble>
             ))
           ) : (
             <p>No entries.</p>

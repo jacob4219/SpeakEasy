@@ -48,7 +48,7 @@ function App() {
   return (
     <AudioSettingsProvider>
       <div className='app'>
-        <h1>Gypsy</h1>
+        <h1>Speak:Easy</h1>
 
         <SpeechToText 
           onFinalTranscription={onFinalTranscription} 
