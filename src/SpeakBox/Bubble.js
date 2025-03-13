@@ -9,7 +9,7 @@ const Bubble = ({ id, entry, field, setEntries, index, moveEntry }) => {
   // Use react-dnd useDrag hook
   const [{ isDragging }, drag] = useDrag({
     type: 'ENTRY',
-    item: { id, field, index },
+    item: { ...entry, field, index },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
