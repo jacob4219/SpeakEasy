@@ -23,8 +23,8 @@ const Entry = ({ entry, setEntries, field }) => {
   };
 
   const playEntry = () => {
-    const { text, audioSettings, selectedVoice } = entry;
-    const voice = voices.find((v) => v.name === selectedVoice);
+    const { text, audioSettings, voice } = entry;
+    const selectedVoice = voices.find((v) => v.name === voice);
 
     const wasListeningBeforePlayback = listeningRef.current;
 
@@ -33,7 +33,7 @@ const Entry = ({ entry, setEntries, field }) => {
     }
 
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.voice = voice;
+    utterance.voice = selectedVoice;
     utterance.volume = audioSettings.volume;
     utterance.rate = audioSettings.rate;
     utterance.pitch = audioSettings.pitch;

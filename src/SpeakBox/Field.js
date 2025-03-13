@@ -1,12 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDrop } from 'react-dnd';
 import Bubble from './Bubble';
+import { useSpeechSynthesis } from 'react-speech-kit';
+import { useAudioSettings } from './AudioSettingsContext';
 
-const Field = ({ title, entries, setEntries, field, mainVoice, mainRate, mainPitch }) => {
+const Field = ({ title, entries, setEntries, field }) => {
+  const { voices } = useSpeechSynthesis();
+  const { selectedVoice, audioSettings } = useAudioSettings();
   const [isCollapsed, setIsCollapsed] = useState(field === 'recycle' || entries.length === 0);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [useMainVoice, setUseMainVoice] = useState(true);
+  const [newEntryText, setNewEntryText] = useState('');
+  const [isAddingEntry, setIsAddingEntry] = useState(false);
   const synth = useRef(window.speechSynthesis);
 
   useEffect(() => {
@@ -120,14 +126,15 @@ const Field = ({ title, entries, setEntries, field, mainVoice, mainRate, mainPit
     const entry = entries[0];
     const utterance = new SpeechSynthesisUtterance(entry.text);
     if (useMainVoice) {
-      utterance.voice = synth.current.getVoices().find(v => v.name === mainVoice);
-      utterance.rate = mainRate;
-      utterance.pitch = mainPitch;
+      utterance.voice = synth.current.getVoices().find(v => v.name === selectedVoice);
+      utterance.rate = audioSettings.rate;
+      utterance.pitch = audioSettings.pitch;
     } else {
       utterance.voice = synth.current.getVoices().find(v => v.name === entry.voice);
       utterance.rate = entry.rate;
       utterance.pitch = entry.pitch;
     }
+
     utterance.onend = () => {
       playEntries(entries.slice(1));
     };
@@ -172,6 +179,23 @@ const Field = ({ title, entries, setEntries, field, mainVoice, mainRate, mainPit
       ...prevEntries,
       [field]: updatedEntries,
     }));
+  };
+
+  const handleAddEntry = () => {
+    if (newEntryText.trim() === '') return;
+    const newEntry = {
+      id: Date.now().toString(),
+      text: newEntryText,
+      voice: selectedVoice,
+      rate: audioSettings.rate,
+      pitch: audioSettings.pitch,
+      audioSettings: { volume: 1, rate: audioSettings.rate, pitch: audioSettings.pitch }, // Ensure audioSettings is set
+    };
+    setEntries((prevEntries) => ({
+      ...prevEntries,
+      [field]: [...prevEntries[field], newEntry],
+    }));
+    setNewEntryText('');
   };
 
   const displayedEntries = isCollapsed
@@ -225,6 +249,21 @@ const Field = ({ title, entries, setEntries, field, mainVoice, mainRate, mainPit
             />
             Use Main Voice
           </label>
+          {!isAddingEntry && (
+            <button onClick={() => setIsAddingEntry(true)}>+</button>
+          )}
+          {isAddingEntry && (
+            <div>
+              <input
+                type="text"
+                value={newEntryText}
+                onChange={(e) => setNewEntryText(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleAddEntry()}
+              />
+              <button onClick={handleAddEntry}>Create</button>
+              <button onClick={() => setIsAddingEntry(false)}>Close</button>
+            </div>
+          )}
         </>
       )}
       {!isCollapsed && (
